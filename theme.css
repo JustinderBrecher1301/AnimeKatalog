@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Bebas+Neue&display=swap');
+:root{--primary:#6366f1;--secondary:#a5b4fc;--dark-bg:#0f172a;--card-bg:#1e293b;--input-bg:#334155;--text:#e5e7eb;--muted:#9ca3af}
+html,body{height:100%}
+body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,'Apple Color Emoji','Segoe UI Emoji',sans-serif;background:var(--dark-bg);color:var(--text)}
+.navbar.bg-body-tertiary,.card,.modal-content,.form-control,.dropdown-menu,.pagination .page-link{background-color:var(--card-bg)!important;color:var(--text)!important;border-color:transparent!important}
+.card{border-radius:1rem}
+.card-img-top{object-fit:cover;height:280px}
+.btn-primary{background:linear-gradient(90deg,var(--primary),var(--secondary))!important;border:none}
+.btn-outline-primary{border-color:var(--primary)!important;color:var(--text)!important}
+.btn-outline-primary:hover{background:var(--primary)!important;border-color:var(--primary)!important}
+.form-control{background-color:var(--input-bg)!important;color:var(--text)!important}
+.form-control::placeholder{color:var(--muted)!important}
+h1,h2,h3,h4,h5{background:linear-gradient(90deg,var(--primary),var(--secondary));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
+.text-muted{color:var(--muted)!important}
+.modal-content{background-color:var(--dark-bg)!important}
+.page-item .page-link{border-radius:.75rem}
+.pagination .page-link{border-radius:.75rem!important}
+.pagination .page-item:first-child .page-link,.pagination .page-item:last-child .page-link{border-radius:.75rem!important}
+.page-item.active .page-link{background:linear-gradient(90deg,var(--primary),var(--secondary));border:0}
+.footer-note{color:var(--muted);font-size:.9rem}
+.accent{font-family:'Bebas Neue','Inter',system-ui,sans-serif;letter-spacing:.5px}
+.stars{font-size:1rem;line-height:1;color:#fbbf24}
+.stars .empty{color:#475569}
+.score-num{font-weight:800;color:#fbbf24}
+.card-title{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:3rem}
+.pagination{gap:.5rem}
+.pagination .spacer .page-link{min-width:7rem;border-radius:.75rem;background:transparent!important;border-color:transparent!important;box-shadow:none;color:transparent;pointer-events:none}
+@media (max-width:576px){.pagination .spacer .page-link{min-width:4.5rem}}

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime-Katalog | Moderne Bewertungen</title>
+    <!-- Lade Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Konfiguriere Tailwind, um die Inter-Schriftart zu verwenden -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': '#6366f1', // Indigo-500
+                        'secondary': '#a5b4fc', // Indigo-300
+                        'dark-bg': '#0f172a', // Slate-900
+                        'card-bg': '#1e293b', // Slate-800
+                        'input-bg': '#334155', // Slate-700
+                        'modal-bg': '#0f172a' // Slate-900 für den Modal-Hintergrund
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Stil für die Sternbewertung und allgemeine Ästhetik -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        /* Grundlegende Stile für die Seite */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Stil für die Sterne (SVG) */
+        .rating-star {
+            width: 1.25rem; /* 20px */
+            height: 1.25rem; /* 20px */
+            fill: currentColor;
+            transition: all 0.1s ease-in-out;
+        }
+
+        /* Spinning Lade-Animation */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #6366f1;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Modal-Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none; /* Standardmäßig ausgeblendet */
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            overflow-y: auto;
+        }
+        /* Definiert einen Klick-Bereich, der auf Mobilgeräten gut funktioniert */
+        .header-action-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.15s;
+        }
+
+    </style>
+</head>
+<body class="bg-dark-bg text-gray-100 min-h-screen p-4 sm:p-8">
+
+    <!-- Haupt-Container -->
+    <div class="max-w-6xl mx-auto">
+
+        <!-- Header-Bereich -->
+        <header class="text-center mb-12 py-8 border-b border-primary/30">
+            <!-- Flex-Container für Titel und Home-Button -->
+            <div class="flex justify-between items-center mb-6 px-4 sm:px-0">
+                <!-- Startseite Button NEU -->
+                <button 
+                    onclick="goHome()" 
+                    class="header-action-button bg-input-bg hover:bg-slate-700/70 text-secondary text-sm sm:text-lg font-semibold flex items-center space-x-2 shadow-lg"
+                >
+                    <!-- Home Icon (inline SVG) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                    <span class="hidden sm:inline">Startseite</span>
+                </button>
+
+                <h1 class="text-5xl sm:text-6xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mx-auto">
+                    Anime-Katalog
+                </h1>
+                
+                <!-- Platzhalter, um den Titel zu zentrieren -->
+                <div class="w-20 sm:w-36"></div>
+            </div>
+
+            <p class="mt-3 text-lg text-gray-400">
+                Suchen Sie nach Ihrem Lieblings-Anime oder entdecken Sie die Top-Titel.
+            </p>
+
+            <!-- Suchfeld-Bereich -->
+            <div class="mt-8 max-w-xl mx-auto flex shadow-xl rounded-xl overflow-hidden">
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    placeholder="Suche nach Anime-Titeln, z.B. One Piece, Naruto..."
+                    class="w-full p-4 bg-input-bg text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary border-none"
+                >
+                <button 
+                    id="search-button" 
+                    class="bg-primary hover:bg-indigo-700 text-white font-bold py-3 px-6 transition duration-150 flex items-center justify-center space-x-2"
+                >
+                    <!-- Lucide Search Icon (inline SVG) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.3-4.3"/>
+                    </svg>
+                    <span class="hidden sm:inline">Suchen</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Ladeanzeige (wird vor dem Laden angezeigt) -->
+        <div id="loading-indicator" class="flex flex-col items-center justify-center p-12 text-gray-400" style="display: none;">
+            <div class="spinner mb-4"></div>
+            <p>Lade Anime-Daten...</p>
+        </div>
+
+        <!-- Anime-Karten-Raster (Dynamischer Container) -->
+        <main id="anime-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Die Karten werden hier dynamisch vom JavaScript eingefügt -->
+        </main>
+        
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-gray-500 text-sm pt-6 border-t border-gray-700/50">
+            Design &amp; Layout by Gemini (Modern Tailwind CSS)
+        </footer>
+
+    </div>
+
+    <!-- ANIME DETAIL MODAL -->
+    <div id="anime-modal" class="modal-overlay" onclick="closeAnimeDetails()">
+        <div class="bg-card-bg rounded-xl shadow-2xl w-full max-w-4xl mx-4 my-8 p-6 sm:p-8 relative transform transition-all duration-300" onclick="event.stopPropagation()">
+            
+            <!-- Schließen-Button -->
+            <button 
+                onclick="closeAnimeDetails()" 
+                class="absolute top-4 right-4 text-gray-400 hover:text-white transition duration-150 p-2 rounded-full hover:bg-input-bg"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+                </svg>
+            </button>
+
+            <!-- Modal-Inhalt (wird von JS gefüllt) -->
+            <div id="modal-content" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Bild-Spalte -->
+                <div class="lg:col-span-1">
+                    <img id="modal-image" src="" alt="Anime Cover" class="rounded-lg w-full shadow-lg">
+                    
+                    <!-- Bewertung -->
+                    <div class="mt-6 p-4 bg-input-bg rounded-lg">
+                        <h4 class="text-lg font-semibold text-primary mb-2">Bewertung</h4>
+                        <div class="flex items-center">
+                            <div id="modal-stars" class="flex mr-3"></div>
+                            <span id="modal-score" class="text-3xl font-bold text-yellow-400"></span>
+                            <span class="ml-2 text-md text-gray-500">/ 10</span>
+                        </div>
+                        <p id="modal-rank" class="text-sm text-gray-400 mt-1"></p>
+                    </div>
+
+                    <!-- NEU: Detaillierte Infos -->
+                    <div class="mt-4 p-4 bg-input-bg rounded-lg">
+                        <p class="text-sm text-gray-300">Episoden: <span id="modal-episodes" class="font-semibold text-white"></span></p>
+                        <p class="text-sm text-gray-300">Status: <span id="modal-status" class="font-semibold text-white"></span></p>
+                        <p class="text-sm text-gray-300">Produziert: <span id="modal-studio" class="font-semibold text-white"></span></p>
+                    </div>
+                </div>
+
+                <!-- Text-Spalte -->
+                <div class="lg:col-span-2">
+                    <h2 id="modal-title" class="text-4xl font-extrabold text-white mb-4 pr-10"></h2>
+                    
+                    <h3 class="text-xl font-semibold text-secondary mb-3">Zusammenfassung</h3>
+                    <p id="modal-synopsis" class="text-gray-300 leading-relaxed mb-6 whitespace-pre-line"></p>
+
+                    <!-- Genres -->
+                    <h3 class="text-xl font-semibold text-secondary mb-3 border-t border-gray-700/50 pt-4">Genres</h3>
+                    <div id="modal-genres" class="flex flex-wrap gap-2 mb-6"></div>
+
+                    <!-- Streaming-Info -->
+                    <h3 class="text-xl font-semibold text-secondary mb-3 border-t border-gray-700/50 pt-4">Streaming</h3>
+                    <div id="modal-streaming" class="flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<script>
+    // Konfiguration der API-Endpunkte
+    const defaultAPI_URL = 'https://api.jikan.moe/v4/top/anime?limit=5'; // Startansicht: Top 5 Empfehlungen
+    const searchAPI_BASE = 'https://api.jikan.moe/v4/anime?q=';
+    const SEARCH_LIMIT = 9; // Max. 9 Ergebnisse für die Suchansicht
+
+    // Globaler Cache für die geladenen Anime-Daten
+    let cachedAnimeData = [];
+
+    // DOM-Elemente
+    const animeContainer = document.getElementById('anime-container');
+    const loadingIndicator = document.getElementById('loading-indicator');
+    const searchInput = document.getElementById('search-input');
+    const searchButton = document.getElementById('search-button');
+    const animeModal = document.getElementById('anime-modal');
+    
+    // --- Hilfsfunktionen für die Darstellung ---
+
+    /**
+     * Erstellt das SVG für eine Sternbewertung (basiert auf 10 Punkten).
+     * @param {number} score - Der 10-Punkte-Score (z.B. 9.1).
+     * @returns {string} Der HTML-String mit den SVG-Sternen.
+     */
+    function createStarRating(score) {
+        const fiveStarScore = (score || 0) / 2;
+        let starsHtml = '';
+        
+        for (let i = 1; i <= 5; i++) {
+            let fillClass = 'text-gray-700'; 
+            
+            if (fiveStarScore >= i) {
+                fillClass = 'text-yellow-400'; 
+            } else if (fiveStarScore >= (i - 1) + 0.6) {
+                 fillClass = 'text-yellow-400 opacity-90'; 
+            } else if (fiveStarScore >= (i - 1) + 0.3) {
+                 fillClass = 'text-yellow-400 opacity-60'; 
+            } else {
+                 fillClass = 'text-gray-700'; 
+            }
+            if (fiveStarScore >= i) {
+                fillClass = 'text-yellow-400';
+            }
+
+
+            // Stern SVG-Pfad
+            const starSvg = `
+                <svg class="rating-star ${fillClass}" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 15l-5.878 3.09 1.123-6.545L.487 7.027l6.561-.955L10 1l2.952 5.072 6.561.955-4.758 4.518 1.123 6.545L10 15z"/>
+                </svg>
+            `;
+            starsHtml += starSvg;
+        }
+
+        return starsHtml;
+    }
+
+    /**
+     * Erstellt eine einzelne Anime-Karte aus den API-Daten.
+     */
+    function createAnimeCard(anime) {
+        const title = anime.title_english || anime.title || 'Unbekannter Titel';
+        // Kurzer Synopsisausschnitt für die Karte
+        const synopsisShort = anime.synopsis ? anime.synopsis.substring(0, 150) + '...' : 'Keine Kurzbeschreibung verfügbar.';
+        const score = anime.score ? anime.score.toFixed(2) : 'N/A';
+        const imageUrl = anime.images?.webp?.large_image_url || 'https://placehold.co/600x400/1e293b/a5b4fc?text=Cover+Fehlt';
+        
+        // Erstelle Genre-Badges
+        const genres = anime.genres ? anime.genres.slice(0, 3).map(genre => {
+            let colorClass = 'bg-gray-600/50 text-gray-100';
+            if (genre.name.includes('Action')) colorClass = 'bg-red-600/50 text-red-100';
+            if (genre.name.includes('Comedy')) colorClass = 'bg-green-600/50 text-green-100';
+            if (genre.name.includes('Fantasy')) colorClass = 'bg-purple-600/50 text-purple-100';
+
+            return `<span class="px-3 py-1 ${colorClass} text-xs font-medium rounded-full">${genre.name}</span>`;
+        }).join('') : '';
+
+        const stars = createStarRating(anime.score);
+
+        return `
+            <div 
+                class="anime-card bg-card-bg rounded-xl shadow-2xl overflow-hidden transform hover:scale-[1.02] transition duration-300 ease-in-out cursor-pointer"
+                onclick="showAnimeDetails(${anime.mal_id})"
+            >
+                
+                <!-- Bild -->
+                <div class="h-48 bg-primary/20 bg-cover bg-center" style="background-image: url('${imageUrl}')"
+                     onerror="this.style.backgroundImage='url(\'https://placehold.co/600x400/1e293b/a5b4fc?text=Cover+Fehlt\')'">
+                </div>
+
+                <div class="p-6">
+                    <h2 class="text-3xl font-bold mb-2 text-primary truncate" title="${title}">${title}</h2>
+                    
+                    <!-- Kurze Info & Genre-Badges -->
+                    <p class="text-gray-400 mb-4 text-sm">${synopsisShort}</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        ${genres}
+                    </div>
+
+                    <!-- Bewertung -->
+                    <div class="flex items-center mt-4 pt-4 border-t border-gray-700/50">
+                        <!-- Visuelle Sterne -->
+                        <div class="flex mr-3">
+                            ${stars}
+                        </div>
+                        <span class="text-xl font-bold text-yellow-400">${score}</span>
+                        <span class="ml-2 text-sm text-gray-500">/ 10</span>
+                    </div>
+                    
+                </div>
+            </div>
+        `;
+    }
+
+    /**
+     * Schließt das Modal.
+     */
+    function closeAnimeDetails() {
+        animeModal.style.display = 'none';
+        document.body.style.overflow = ''; // Scrollen wieder aktivieren
+    }
+
+
+    /**
+     * Zeigt das Modal mit den vollständigen Details an.
+     * @param {number} malId - Die MyAnimeList ID des Anime.
+     */
+    function showAnimeDetails(malId) {
+        // Finde den Anime im Cache
+        const anime = cachedAnimeData.find(a => a.mal_id === malId);
+
+        if (!anime) {
+            console.error('Anime-Daten nicht im Cache gefunden:', malId);
+            return;
+        }
+
+        // 1. Titel und Synopse
+        const title = anime.title_english || anime.title || 'Unbekannter Titel';
+        const fullSynopsis = anime.synopsis || 'Keine vollständige Zusammenfassung verfügbar.';
+        document.getElementById('modal-title').textContent = title;
+        document.getElementById('modal-synopsis').textContent = fullSynopsis;
+
+        // 2. Bild
+        const imageUrl = anime.images?.webp?.large_image_url || 'https://placehold.co/600x400/1e293b/a5b4fc?text=Cover+Fehlt';
+        document.getElementById('modal-image').src = imageUrl;
+        document.getElementById('modal-image').alt = title + ' Cover';
+
+        // 3. Bewertung und Rang
+        const score = anime.score ? anime.score.toFixed(2) : 'N/A';
+        const rank = anime.rank ? `#${anime.rank} (MyAnimeList)` : 'Nicht gerankt';
+        document.getElementById('modal-stars').innerHTML = createStarRating(anime.score);
+        document.getElementById('modal-score').textContent = score;
+        document.getElementById('modal-rank').textContent = rank;
+
+        // 4. Detaillierte Infos
+        document.getElementById('modal-episodes').textContent = anime.episodes || 'N/A';
+        document.getElementById('modal-status').textContent = anime.status || 'N/A';
+        document.getElementById('modal-studio').textContent = anime.studios && anime.studios.length > 0 ? anime.studios[0].name : 'N/A';
+
+
+        // 5. Genres
+        const genresHtml = anime.genres ? anime.genres.map(genre => {
+            let colorClass = 'bg-indigo-700/50 text-indigo-100';
+            if (genre.name.includes('Action')) colorClass = 'bg-red-700/50 text-red-100';
+            if (genre.name.includes('Comedy')) colorClass = 'bg-green-700/50 text-green-100';
+            
+            return `<span class="px-3 py-1 ${colorClass} text-sm font-medium rounded-full">${genre.name}</span>`;
+        }).join('') : '<p class="text-gray-500">Keine Genre-Informationen.</p>';
+        document.getElementById('modal-genres').innerHTML = genresHtml;
+
+        // 6. Streaming-Links
+        const streamingLinksHtml = anime.streaming && anime.streaming.length > 0
+            ? anime.streaming.map(service => {
+                return `<a href="${service.url}" target="_blank" rel="noopener noreferrer" class="px-3 py-1 bg-indigo-500/50 hover:bg-indigo-600/70 text-indigo-100 text-xs font-medium rounded-full transition duration-150 block text-center truncate" title="Streamen auf ${service.name}">
+                            ${service.name}
+                        </a>`;
+            }).join('')
+            : '<span class="px-3 py-1 bg-gray-600/50 text-gray-400 text-xs font-medium rounded-full">Keine Streaming-Informationen.</span>';
+        document.getElementById('modal-streaming').innerHTML = streamingLinksHtml;
+
+        // Modal anzeigen
+        animeModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Scrollen des Hintergrunds verhindern
+        animeModal.scrollTo(0, 0); // Nach oben scrollen
+    }
+
+
+    /**
+     * Setzt die Ansicht auf die Startseite (Top 5 Empfehlungen) zurück.
+     */
+    function goHome() {
+        searchInput.value = ''; // Suchfeld leeren
+        fetchAndRenderAnime(null); // Lade die Standard-Top-Anime
+    }
+    // Stelle sicher, dass die Funktion global zugänglich ist
+    window.goHome = goHome;
+
+
+    // --- Haupt-Logik ---
+
+    /**
+     * Ruft die Anime-Daten von der Jikan API ab und rendert sie.
+     * @param {string | null} query - Der Suchbegriff oder null für Top-Anime.
+     */
+    async function fetchAndRenderAnime(query = null) {
+        // Zeige Ladeindikator und verstecke Container
+        loadingIndicator.style.display = 'flex';
+        animeContainer.style.display = 'none';
+        animeContainer.innerHTML = ''; // Container leeren
+        cachedAnimeData = []; // Cache leeren
+
+        let url;
+        let resultType; 
+
+        if (query && query.trim() !== '') {
+            url = `${searchAPI_BASE}${encodeURIComponent(query)}&limit=${SEARCH_LIMIT}`;
+            resultType = `Suchergebnisse für "${query}"`;
+        } else {
+            url = defaultAPI_URL;
+            resultType = 'Aktuelle Top 5 Empfehlungen';
+        }
+
+        try {
+            const response = await fetch(url);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP-Fehler! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            if (data.data && data.data.length > 0) {
+                // Daten im Cache speichern
+                cachedAnimeData = data.data;
+
+                // Karten dynamisch rendern
+                const htmlContent = data.data.map(createAnimeCard).join('');
+                
+                // Füge einen Titel für die Ergebnisse hinzu
+                animeContainer.innerHTML = `<h2 class="col-span-full text-2xl font-semibold mb-6 text-secondary border-b border-primary/30 pb-2">${resultType}</h2>` + htmlContent;
+                
+                // Blende Ladeindikator aus und zeige Container
+                loadingIndicator.style.display = 'none';
+                animeContainer.style.display = 'grid'; 
+            } else {
+                animeContainer.innerHTML = `
+                    <p class="text-center col-span-full text-red-400 p-8 bg-card-bg rounded-lg">
+                        Keine Ergebnisse für Ihre Suche gefunden. Versuchen Sie es mit einem anderen Begriff.
+                    </p>`;
+                loadingIndicator.style.display = 'none';
+                animeContainer.style.display = 'block';
+            }
+
+        } catch (error) {
+            console.error('Fehler beim Abrufen der Anime-Daten:', error);
+            animeContainer.innerHTML = `
+                <div class="text-center col-span-full p-8 bg-red-900/50 rounded-lg">
+                    <h3 class="text-xl font-bold text-red-400 mb-2">Laden der Daten fehlgeschlagen</h3>
+                    <p class="text-red-300">Es gab ein Problem beim Verbinden mit der Jikan API.</p>
+                    <p class="text-red-500 text-sm mt-1">Details: ${error.message}</p>
+                </div>
+            `;
+            loadingIndicator.style.display = 'none';
+            animeContainer.style.display = 'block';
+        }
+    }
+
+    /**
+     * Startet die Suche basierend auf der Eingabe.
+     */
+    function handleSearch() {
+        const query = searchInput.value;
+        fetchAndRenderAnime(query);
+    }
+
+    /**
+     * Initialisiert die Anwendung und richtet Event Listener ein.
+     */
+    function initialize() {
+        // Initialer Ladevorgang (Top 5 Anime)
+        fetchAndRenderAnime(); 
+        
+        // Event Listener für den Klick auf den Suchen-Button
+        searchButton.addEventListener('click', handleSearch);
+
+        // Event Listener für die Enter-Taste im Suchfeld
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault(); 
+                handleSearch();
+            }
+        });
+
+        // Event Listener zum Schließen des Modals bei ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && animeModal.style.display === 'flex') {
+                closeAnimeDetails();
+            }
+        });
+    }
+
+    // Starte die Initialisierung, sobald das Fenster geladen ist
+    window.onload = initialize;
+
+</script>
+
+</body>
+</html>
