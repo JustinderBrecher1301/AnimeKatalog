@@ -14,12 +14,16 @@
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav"><span class="navbar-toggler-icon"></span></button>
     <div id="nav" class="collapse navbar-collapse">
       <ul class="navbar-nav me-auto">
-        <li class="nav-item"><a class="nav-link text-white-50" href="alphabet.html">A–Z</a></li>
         <li class="nav-item"><a class="nav-link text-white-50" href="sortierung.html">Sortierung</a></li>
-        <li class="nav-item"><a class="nav-link text-white-50" href="about.html">Über</a></li>
+        <li class="nav-item"><a class="nav-link text-white-50" href="favoriten.html">Favoriten</a></li>
+        <li class="nav-item"><a class="nav-link text-white-50" href="dokumentation.html">Dokumentation</a></li>
       </ul>
       <form id="searchForm" class="d-flex" role="search">
-        <input id="q" class="form-control me-2" type="search" placeholder="Anime suchen…" aria-label="Suche">
+        <select id="searchType" class="form-select me-2" aria-label="Suchtyp">
+          <option value="series" selected>Serie</option>
+          <option value="character">Charaktere</option>
+        </select>
+        <input id="q" class="form-control me-2" type="search" placeholder="Serien suchen…" aria-label="Suche">
         <button class="btn btn-primary" type="submit">Suche</button>
       </form>
     </div>
@@ -43,9 +47,9 @@
     <div class="modal-content p-2">
       <div class="modal-header border-0"><h5 id="mTitle" class="modal-title"></h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
-      <div class="modal-body"><div class="d-flex gap-3">
-        <img id="mImg" class="rounded shadow" style="width:220px;height:auto" alt="">
-        <div><p id="mSynopsis" class="mb-2"></p><div class="small text-muted" id="mMeta"></div></div>
+      <div class="modal-body"><div class="modal-detail">
+        <img id="mImg" class="rounded shadow modal-img" alt="">
+        <div class="modal-text"><p id="mSynopsis" class="mb-2"></p><div class="small text-muted" id="mMeta"></div></div>
       </div></div>
     </div>
   </div>
