@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Dokument-Titel im Browser-Tab -->
+<title>Anime-Katalog · Dokumentation</title>
+    <!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Eigenes Theme -->
+<link href="theme.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Hauptnavigation: Links zu den Feature-Seiten -->
+<nav class="navbar navbar-expand-lg bg-body-tertiary py-3">
+  <div class="container">
+    <a class="navbar-brand fw-semibold text-white" href="index.html">Anime-Katalog</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav"><span class="navbar-toggler-icon"></span></button>
+    <div id="nav" class="collapse navbar-collapse">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link text-white-50" href="sortierung.html">Sortierung</a></li>
+        <li class="nav-item"><a class="nav-link text-white-50" href="favoriten.html">Favoriten</a></li>
+        <li class="nav-item"><a class="nav-link text-white-50" href="dokumentation.html">Dokumentation</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<!-- Seiteninhalt: statische Beschreibung der App-Funktionen und Navigation -->
+<main class="container py-4">
+    <!-- Einleitung: Seitentitel + Kurzbeschreibung -->
+<header class="text-center mb-4">
+    <h1 class="display-6 fw-semibold">Dokumentation</h1>
+    <p class="text-muted mb-0">Kurze Übersicht aller Funktionen, Wege und Bereiche.</p>
+  </header>
+
+    <!-- Abschnitt: Schnellstart / How-To -->
+<section class="mb-4">
+    <div class="p-4 rounded-4 shadow-sm bg-dark text-white">
+      <h2 class="h4 fw-semibold mb-2">Schnelleinstieg</h2>
+      <p class="mb-1"><span class="fw-semibold">Startseite:</span> öffne <code>index.html</code>. Oben rechts wählst du zwischen Serie und Charaktere und nutzt die Suche.</p>
+      <p class="mb-1"><span class="fw-semibold">Sortierung:</span> klicke in der Navigation auf <span class="fw-semibold">Sortierung</span> für die Übersicht nach Serien oder Charakteren.</p>
+      <p class="mb-0"><span class="fw-semibold">Favoriten:</span> klicke auf <span class="fw-semibold">Favoriten</span>, um Profile und Lieblingsangaben zu speichern.</p>
+    </div>
+  </section>
+
+  <section class="mb-4">
+    <div class="row g-3">
+      <div class="col-12 col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body">
+            <h2 class="h5 fw-semibold text-success mb-2">Suche und Startseite</h2>
+            <p class="mb-2">Die Startseite ist der zentrale Einstieg für alle Inhalte. Dort findest du:</p>
+            <ul class="mb-0">
+              <li><span class="fw-semibold">Auswahl Serie / Charaktere</span> für die Suche.</li>
+              <li><span class="fw-semibold">Suchfeld</span> mit direkter Ergebnisliste.</li>
+              <li><span class="fw-semibold">Grid-Ansicht</span> mit Karten und Detail-Modal.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body">
+            <h2 class="h5 fw-semibold text-info mb-2">Sortierung</h2>
+            <p class="mb-2">Auf der Sortierungsseite kannst du Inhalte nach Typ durchschalten:</p>
+            <ul class="mb-0">
+              <li><span class="fw-semibold">Serie</span> oder <span class="fw-semibold">Charaktere</span> auswählen.</li>
+              <li><span class="fw-semibold">Alphabetleiste</span> für schnellen Sprung.</li>
+              <li><span class="fw-semibold">Pagination</span> um weitere Ergebnisse zu laden.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body">
+            <h2 class="h5 fw-semibold text-warning mb-2">Favoriten</h2>
+            <p class="mb-2">Hier kannst du persönliche Favoriten pflegen:</p>
+            <ul class="mb-0">
+              <li><span class="fw-semibold">Formular</span> für Name, Alter und Genre.</li>
+              <li><span class="fw-semibold">Auswahllisten</span> für Anime und Charaktere.</li>
+              <li><span class="fw-semibold">Beispiele</span> für angelegte Profile.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body">
+            <h2 class="h5 fw-semibold text-danger mb-2">Alphabet A-Z</h2>
+            <p class="mb-2">Die A-Z Seite bietet eine schnelle Navigation:</p>
+            <ul class="mb-0">
+              <li><span class="fw-semibold">Buchstabenfilter</span> für Serien.</li>
+              <li><span class="fw-semibold">Grid-Ansicht</span> mit Details.</li>
+              <li><span class="fw-semibold">Pagination</span> für mehrere Seiten.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-4">
+    <div class="p-4 rounded-4 shadow-sm bg-dark text-white">
+      <h2 class="h4 fw-semibold mb-3">Navigation und Wege</h2>
+      <div class="row g-3">
+        <div class="col-12 col-md-6">
+          <div class="border-start border-3 border-primary ps-3">
+            <div class="fw-semibold">Startseite</div>
+            <div class="text-white-50 small">index.html</div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="border-start border-3 border-info ps-3">
+            <div class="fw-semibold">Sortierung</div>
+            <div class="text-white-50 small">sortierung.html</div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="border-start border-3 border-warning ps-3">
+            <div class="fw-semibold">Favoriten</div>
+            <div class="text-white-50 small">favoriten.html</div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="border-start border-3 border-danger ps-3">
+            <div class="fw-semibold">Alphabet A-Z</div>
+            <div class="text-white-50 small">alphabet.html</div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="border-start border-3 border-secondary ps-3">
+            <div class="fw-semibold">Dokumentation</div>
+            <div class="text-white-50 small">dokumentation.html</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+
+<!-- Bootstrap JS (für Navigation/Interaktionen; hier primär Layout) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
